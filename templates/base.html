@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <title>{{title}}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename ='css/main.css')}}">
+    <style>
+            .errors {color: red;} 
+    </style>
+</head>
+
+<body>
+    <div id ="container">
+        <div class ="header">
+           {% block nav %}
+            {% endblock nav%}                                              
+        </div>
+   <hr>
+    {% block content %}
+    {% endblock content %}
+
+    </div>
+</body>
+</html>
+
+

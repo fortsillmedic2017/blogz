@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+<!-- added code from this page to nav section of layout -->
+{% block nav %}
+<h1 class = "h1_welcome">Welcome To<br> BLOG-BOOK</h1>
+<ul class="nav_ul">
+        <li><a href="/login">Login</a></li>
+</ul>
+
+{% endblock nav %}
+
+
+<!-- added code from this page to content section of layout -->
+{% block content %}
+
+    <form action="/signup" method="POST"> <!--action is the url you send form inputs to, to be read {@app,route("/signup",methods=["POST"}-->
+        <table>                           
+            <tbody> 
+                <tr>
+                         {{ form.hidden_tag() }}  <!-- do'nt forget("MUST HAVE!!") to add this so can validate from forms.py-->
+                    <td>{{ form.username.label }}</td><!-- give the lable in form.py-->
+                    <td>{{ form.username }}<!-- gives lable input feild/box to fill in from form.py-->
+                        {% for error in form.username.errors %} <!--reads field-inputs in forms.py for errors-->
+                            <span class ="errors">{{ error }}</span><!--displays error next to input box (in red)-->
+                            
+                        {% endfor %}<!-- ends python code for username-->
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>{{ form.password.label }}</td>
+                    <td>{{ form.password }}
+                        {% for error in form.password.errors %}
+                                <span class="errors">{{ error }}</span>  
+                        {% endfor %}
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td>{{ form.verify_password.label }}</td>
+                    <td>{{ form.verify_password }}
+                        {% for error in form.verify_password.errors %}
+                               <span class="errors">{{ error }}</span>
+                        {% endfor %}
+                    </td>
+                </tr>
+            
+                <tr>
+                    <td>{{ form.email.label }}</td>
+                    <td>{{ form.email }}
+                        {% for error in form.email.errors %}
+                               <span class="errors">{{ error }}</span>
+                        {% endfor %}
+                    </td>
+                </tr>
+            </tbody>
+        </table>  
+        <p></p>
+        <input type="Submit" value="Signup">
+    </form>    
+
+<p></p>
+<p></p>
+<p></p>
+    <h2 style="text-align:center">If you already signed up just click <a href="/login">here</a> or the Login tab on top to login.</h2>            
+<!--======= end of form =====================-->
+
+{% endblock content %}

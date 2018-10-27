@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+
+<!-- added code from this page to nav section of layout -->
+{% block nav %}
+<h1>This is the Welcome Page</h1>
+    
+{% endblock nav %}
+
+<!-- added code from this page to content section of layout -->
+{% block content %}
+<h1>Welcome {{form.username.data}}</h1>
+<h2 style="text-aligned:center">Please click <a href="/login">here</a> or the Login tab on top to login. Enter your username and Password to Access the <br>
+Website HomePage.</h2>
+
+
+{% endblock content %}

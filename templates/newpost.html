@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block nav %}
+    <nav>
+        <ul>
+            <li><a href="/blog">Main Page Blog</a></li>
+            <li><a href="/newpost">Add a Blog Entry</a></li>
+        </ul>
+    </nav>
+{% endblock nav %}
+
+{% block content %}
+    <h1>{{title}}</h1>
+
+   <div class = "title_input">
+        <form action = "/newpost" method="POST">        
+           {{ form.hidden_tag() }} 
+           {{ form.heading.label }}
+           {{ form.heading }}
+           {% for error in form.heading.errors %} 
+           <span class ="errors">{{ error }}</span>
+           {% endfor %}
+    </div>
+
+    <div class = "blog_input" style= "margin-top:100px">
+          {{ form.hidden_tag() }} 
+          {{ form.body.label }}
+          {{ form.body }}
+          {% for error in form.body.errors %} 
+           <span class ="errors">{{ error }}</span>          
+          {% endfor %}
+           <label>
+              <input type="submit"  value="Add Entry">
+           </label>  
+         </form>
+    </div>
+
+{% endblock content %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
