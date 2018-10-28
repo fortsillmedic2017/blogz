@@ -7,18 +7,16 @@
         </ul>
     </nav>
 {% endblock nav %}
-    {% block content %}
+
+
+{% block content %}
 
         <h1>{{title}}</h1>
 
-    {% if blogs|length == 0 %}
-        <p>No post yet</p>
-        
-    {% else %}
+    
         {% for blog in blogs %}
             <h1 class="heading_h1"><a href="/add_post"> {{blog.heading}}</a></h1>
             <p>{{blog.body}}</p>
         {% endfor %}
-    {% endif %}
 
 {% endblock content %}
