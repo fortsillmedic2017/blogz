@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+
+<!-- added code from this page to nav section of layout -->
+{% block nav %}
+<ul class="nav_ul">
+        <li><a href="/login">Login</a></li>
+        <li><a href="/signup">Sign Up</a></li>
+</ul>
+   
+{% endblock nav %}
+
+
+<!-- added code from this page to content section of layout -->
+{% block content %}
+{% if not form.username.data%}
+    <h1>GoodBye<h1>
+    <h2 style="text-aligned:center">You are now logged off.</h2>
+    <h2>Please click <a href="/login">here</a> or the Login tab on top to Login.<br>
+    Please click <a href="/signup">here</a> or the Sign Up tab on top to Sign Up.</h2>
+
+{% else %}
+    <h1>GoodBye {{form.username.data}}</h1>
+    <h2 style="text-aligned:center">You are now logged off.</h2>
+    <h2>Please click <a href="/login">here</a> or the Login tab on top to Login.<br>
+    Please click <a href="/signup">here</a> or the Sign Up tab on top to Sign Up.</h2>
+
+{% endif %}
+{% endblock content %}

@@ -1,7 +1,7 @@
 from flask import Flask, request, redirect, url_for, render_template, flash
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
-import pymysql
+import pymysql, requests
 from forms import UserLogin, UserSignup, Add_Blog
 
 #=============================================================================
@@ -33,8 +33,8 @@ def __repr__(self):
 
 class Blog (db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    heading = db.Column(db.String(120), nullable=False)
-    body = db.Column(db.String(5000), nullable=False)
+    heading = db.Column(db.String(120))
+    body = db.Column(db.String(5000))
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     #user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
 
@@ -49,51 +49,6 @@ def __repr__(self):
 
 #Create Your routes
 
-@app.route("/blog")
-def display_blogs():
-    form = Add_Blog
-    blogs = Blog.query.all()
-    #headings = blogs.heading.all()
-    #bodies= blogs.body.all()
-    return render_template("/blog.html", title= "Posted Blogs", blogs = blogs)
-
-
-@app.route("/newpost", methods= ["POST", "GET"])
-def add_new_post():
-    form = Add_Blog()
-    if request.method == "POST":
-        input_title = form.heading.data
-        input_body = form.body.data
-        new_blog = Blog(heading=input_title, body=input_body)
-        db.session.add(new_blog)
-        db.session.commit()
-        
-        blogs = Blog.query.all()
-
-        '''input_body = form.body.data
-        new_body = Blog(body = input_body)
-        db.session.add(new_body)
-        db.session.commit()'''
-
-
-    
-    if form.validate_on_submit():
-        # If all input is valid when you hit submit will go to "welcome.html"
-        return render_template("blog.html", form=form, title="Posted Blogs", blogs=blogs)
-    # If any of input is not valid when you hit submit will go back to "signup.html"
-    return render_template("newpost.html", title="Add new Post!", form=form)
-
-
-    
-@app.route("/add_post")
-def add_post():
-    form = Add_Blog()
-    #return render_template("newpost.html", title_m="Add A Post!")
-    return render_template("add_post.html", title="Added This Post!", form = form)
-
-#===========================================================================
-
-
 @app.route("/")
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
@@ -104,28 +59,80 @@ def signup():
     # If any of input is not valid when you hit submit will go back to "signup.html"
     return render_template("signup.html", form=form, title="Signup")
 
+#===========================================================================
+
 
 @app.route("/login",  methods=["GET", "POST"])
 def login():
     form = UserLogin()
     if form.validate_on_submit():
         # If all input is valid when you hit submit will go to "welcome.html"
-        return render_template("blog.html", form=form, title="Blogs HomePage")
+       return render_template("blog.html", form=form, title="Posted Blogs", blogs=blogs)
     # If any of input is not valid when you hit submit will go back to "signup.html
     return render_template("login.html", form=form, title="Login")
 
+#===========================================================================
 
-@app.route("/home")
-def home():
+@app.route("/blog")
+def display_blogs():
+    form = Add_Blog
+    blogs = Blog.query.all()
+    #headings = blogs.heading.all()
+    #bodies= blogs.body.all()
+    return render_template("blog.html", title= "Posted Blogs", blogs = blogs)
+
+#===========================================================================
+
+'''@app.route("/newpost", methods= ["POST", "GET"])
+def add_new_post():
+    form = Add_Blog()
+    if request.method == "POST":
+        input_title = form.heading.data
+        input_body = form.body.data
+        new_blog = Blog(heading=input_title, body=input_body)
+        db.session.add(new_blog)
+        db.session.commit()
+        
+        blogs = Blog.query.all()
+      
+
+    if form.validate_on_submit():
+        # If all input is valid when you hit submit will go to "welcome.html"
+        return render_template("added_post.html", form=form, title="Added Post", blogs=blogs)
+    # If any of input is not valid when you hit submit will go back to "signup.html"
+    return render_template("newpost.html", title="Add new Post!", form=form)'''
+
+#===========================================================================
+
+
+@app.route("/added_post", methods=["POST", "GET"])
+def added_post():
+    form = Add_Blog()
+   # if request.method == "GET":
+       
+    input_title = form.heading.data
+    input_body = form.body.data
+    new_blog = Blog(heading=input_title, body=input_body)
+    db.session.add(new_blog)
+    db.session.commit()
+
+    blogs = Blog.query.all()
+       
+       
+    '''blog_id = request.args.get("blog-id")
+        blogs = Blog.query.get(blog_id)'''
+    return render_template("added_post.html", title="Added This Post!", form=form, blogs=blogs)
+
+    
+
+#===========================================================================
+
+@app.route("/logoff")
+def logoff():
     form = UserLogin()
-    return render_template("home.html", title="Home Page", form=form)
+    return render_template("logoff.html", form=form, title="Login")
 
-
-@app.route("/welcome")
-def welcome():
-    form = UserSignup()
-    return render_template("signup.html", title="Signup Page", form=form)
-
+#===========================================================================
 
 
 

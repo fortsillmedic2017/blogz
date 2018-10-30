@@ -2,21 +2,34 @@
 {% block nav %}
     <nav>
         <ul>
-            <li><a href="/blog.html">Main Page Blog</a></li>
+            <li><a href="/blog">Main Page Blog</a></li>
             <li><a href="/newpost">Add a Blog Entry</a></li>
+            <li><a href="/logoff">Log Off</a></li>
         </ul>
     </nav>
 {% endblock nav %}
 
 
 {% block content %}
-
-        <h1>{{title}}</h1>
-
-    
-        {% for blog in blogs %}
-            <h1 class="heading_h1"><a href="/add_post"> {{blog.heading}}</a></h1>
-            <p>{{blog.body}}</p>
-        {% endfor %}
-
+<h1>{{title}}</h1>
+    {% for blog in blogs %}
+        <h1 class="heading_h1"><a href="/added_post">{{blog.heading}}</h1>
+        <form action = "/blog.html" method = "GET">
+                 <input type="hidden" name = "blog-id" value= {{blog.id}}>            
+            </form></a>
+        <p>{{blog.body}}</p>
+            
+   {% endfor %}  
+       
 {% endblock content %}
+
+
+<!--{% for blog in blogs %}
+    
+    form action = "/added_post" method = "GET">
+           <h1 class="heading_h1"><a href="/added_post"> {{blog.heading}}</a>
+              <input type="hidden" name = "blog-id" value = {{blog.id}}>
+            <p>{{blog.body}}</p>
+        </form>
+        
+    {% endfor %}-->

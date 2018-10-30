@@ -5,6 +5,7 @@
         <ul>
             <li><a href="/blog">Main Page Blog</a></li>
             <li><a href="/newpost">Add a Blog Entry</a></li>
+             <li><a href="/logoff">Log Off</a></li>
         </ul>
     </nav>
 {% endblock nav %}
@@ -13,23 +14,25 @@
     <h1>{{title}}</h1>
 
    <div class = "title_input">
-        <form action= "?"  method="POST">        
+     <div>
+        <form  action = "/added_post" method = "POST">       
            {{form.hidden_tag()}} 
            {{form.heading.label}}
            {{form.heading}}
            {% for error in form.heading.errors %} 
            <span class ="errors">{{ error }}</span>
            {% endfor %}
-    </div>
+     </div>
 
-    <div class = "blog_input" style= "margin-top:100px">
+     <div class = "blog_input" style= "margin-top:100px">
           {{form.hidden_tag()}} 
           {{form.body.label}}
           {{form.body}}
           {% for error in form.body.errors %} 
-           <span class ="errors">{{ error }}</span>          
+           <span class ="errors">{{ error }}</span>  
           {% endfor %}
-           <label>
+     </div>
+          <label>   
               <input type="submit"  value="Add Entry">
            </label>  
          </form>

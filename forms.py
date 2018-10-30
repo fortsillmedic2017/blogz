@@ -1,17 +1,15 @@
 from flask_wtf import FlaskForm, form
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, Form, TextField, TextAreaField, validators
+from wtforms import Form, StringField, IntegerField,  PasswordField, SubmitField, BooleanField, Form, TextField, TextAreaField, validators
 from wtforms.validators import DataRequired, Length, Email, EqualTo, InputRequired, Optional, Regexp
-
-
-
 
 class Add_Blog(FlaskForm):
     heading = StringField("The title for your new blog:", validators=[InputRequired(),Length(
         min=2, max=20, message="That's not a valid title.")])
     body = TextAreaField("Your new blog:", validators=[InputRequired(), Length(
         min=2, max=5000, message="That's not a valid message.")])
-
-#=================================================================================
+    
+    
+#==============================================================================
 class UserSignup(FlaskForm):
     username = StringField("Username", validators=[Length(
         min=3, max=20, message="That's not a valid username.")])
