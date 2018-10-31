@@ -3,7 +3,8 @@ from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 import pymysql, requests
 from forms import UserLogin, UserSignup, Add_Blog
-
+from wtforms_sqlalchemy.fields import QuerySelectField
+from bs4 import BeautifulSoup
 #=============================================================================
 
 app = Flask(__name__)
@@ -65,9 +66,10 @@ def signup():
 @app.route("/login",  methods=["GET", "POST"])
 def login():
     form = UserLogin()
+    blogs = Blog.query.all()
     if form.validate_on_submit():
         # If all input is valid when you hit submit will go to "welcome.html"
-       return render_template("blog.html", form=form, title="Posted Blogs", blogs=blogs)
+       return render_template("blog.html", form=form, title="All Post", blogs=blogs)
     # If any of input is not valid when you hit submit will go back to "signup.html
     return render_template("login.html", form=form, title="Login")
 
@@ -75,20 +77,21 @@ def login():
 
 @app.route("/blog")
 def display_blogs():
-    form = Add_Blog
+    form = Add_Blog()
     blogs = Blog.query.all()
-    #headings = blogs.heading.all()
-    #bodies= blogs.body.all()
-    return render_template("blog.html", title= "Posted Blogs", blogs = blogs)
 
+    return render_template("blog.html", form=form, title="All Post", blogs=blogs)
+ 
 #===========================================================================
 
-'''@app.route("/newpost", methods= ["POST", "GET"])
+
+@app.route("/newpost",  methods=["POST", "GET"])
 def add_new_post():
     form = Add_Blog()
     if request.method == "POST":
         input_title = form.heading.data
         input_body = form.body.data
+        blog_id = request.form["blog-id"]
         new_blog = Blog(heading=input_title, body=input_body)
         db.session.add(new_blog)
         db.session.commit()
@@ -98,9 +101,9 @@ def add_new_post():
 
     if form.validate_on_submit():
         # If all input is valid when you hit submit will go to "welcome.html"
-        return render_template("added_post.html", form=form, title="Added Post", blogs=blogs)
+        return render_template("blog.html", form=form, title="Added Post", blogs=blogs)
     # If any of input is not valid when you hit submit will go back to "signup.html"
-    return render_template("newpost.html", title="Add new Post!", form=form)'''
+    return render_template("newpost.html", title="Add new Post!", form=form)
 
 #===========================================================================
 
@@ -108,21 +111,15 @@ def add_new_post():
 @app.route("/added_post", methods=["POST", "GET"])
 def added_post():
     form = Add_Blog()
-   # if request.method == "GET":
-       
-    input_title = form.heading.data
-    input_body = form.body.data
-    new_blog = Blog(heading=input_title, body=input_body)
-    db.session.add(new_blog)
-    db.session.commit()
+    
+    blog_id = request.args.get("blog-id")
+    blog = Blog.query.get(blog_id)
+    
+    
+    return render_template("added_post.html", title="Added Post!", form=form , blog= blog)
 
-    blogs = Blog.query.all()
-       
-       
-    '''blog_id = request.args.get("blog-id")
-        blogs = Blog.query.get(blog_id)'''
-    return render_template("added_post.html", title="Added This Post!", form=form, blogs=blogs)
-
+    
+ 
     
 
 #===========================================================================

@@ -9,12 +9,10 @@
     </nav>
 {% endblock nav %}
 
-<h1>{{blogs.heading}}</h1>
+
 {% block content %}
-    <h1 class="heading_h1"><a href="/added_post">{{blog.heading}}</h1>
-        <form action = "/blog.html" method = "GET">
-                 <input type="hidden" name = "blog-id" value= {{blog.id}}>            
-            </form></a>
-        <p>{{blog.body}}</p>
+<h1>{{title}}</h1>
+<h1 class="heading_h1"><a href="/added_post"> {{blog.heading}}</a></h1>
+             <p>{{blog.body}}</p>
 {% endblock content %}
 

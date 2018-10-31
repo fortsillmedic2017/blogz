@@ -15,7 +15,7 @@
 
    <div class = "title_input">
      <div>
-        <form  action = "/added_post" method = "POST">       
+        <form "/blog" method = "POST">       
            {{form.hidden_tag()}} 
            {{form.heading.label}}
            {{form.heading}}
@@ -32,9 +32,10 @@
            <span class ="errors">{{ error }}</span>  
           {% endfor %}
      </div>
-          <label>   
-              <input type="submit"  value="Add Entry">
-           </label>  
+        <label>  
+            <input type="hidden"  name="blog-id">
+            <input type="submit"  value="Add Entry">
+        </label>  
          </form>
     </div>
 
