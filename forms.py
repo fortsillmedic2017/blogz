@@ -1,7 +1,8 @@
 from flask_wtf import FlaskForm, form
-from wtforms import Form, StringField, IntegerField,  PasswordField, SubmitField, BooleanField, Form, TextField, TextAreaField, validators
+from wtforms import fields, Form, StringField, IntegerField,  PasswordField, SubmitField, BooleanField, Form, TextField, TextAreaField, validators
 from wtforms.validators import DataRequired, Length, Email, EqualTo, InputRequired, Optional, Regexp
 from wtforms_sqlalchemy.fields import QuerySelectField
+
 class Add_Blog(FlaskForm):
     heading = StringField("The title for your new blog:", validators=[InputRequired(),Length(
         min=2, max=250, message="That's not a valid title.")])
@@ -29,10 +30,10 @@ class UserSignup(FlaskForm):
 
 #==========in puts for Login Form for main.py  =========================>
 class UserLogin(FlaskForm):
-    username = StringField("Username", validators=[Length(
+    username = StringField("Username", validators=[InputRequired(),Length(
         min=3, max=20, message="That's not a valid username.")])
   
     password = PasswordField("Password",
-                             validators=[Length(min=3, max=20, message="That's not a valid password. Must have at lease 3 characters")])
+                             validators=[InputRequired(),Length(min=3, max=20, message="That's not a valid password. Must have at lease 3 characters")])
 
     

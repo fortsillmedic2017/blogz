@@ -1,4 +1,5 @@
 {
     "python.pythonPath": "C:\\Users\\Davis Hilton\\AppData\\Local\\conda\\conda\\envs\\flask-env\\python.exe",
-    "python.linting.enabled": false
+    "python.linting.enabled": false,
+    "beautify.config": null
 }
