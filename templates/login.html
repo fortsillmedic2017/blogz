@@ -10,13 +10,15 @@
 {% endif %}
 
 <ul class="nav_ul">
-        <li><a href="/signup">Sign Up</a></li>
+        <li><a href="/signup">Create An Account</a></li>
+         <li><a href="/logout">Logout</a></li>
 </ul>
 {% endblock nav %}
 
 {% block content %}
 <p></p>
 <form action="/login" method="POST">
+<span class="errors">{{ errors }}</span>
     <table>
         <tbody>
             <tr>
@@ -42,6 +44,10 @@
         <p></p>
         <input type="Submit" value="Login">
 </form>
+
+<h2>       
+If you have not already signed up click <a href="/signup">here</a> or the Create An Account tab on top to login.
+</h2> 
 {% endblock content %}
 
 

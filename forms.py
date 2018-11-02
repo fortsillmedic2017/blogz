@@ -22,7 +22,7 @@ class UserSignup(FlaskForm):
                                     validators=[Length(min=3, max=20, message="That's not a valid password. Must have at lease 3 characters"),
                                                 EqualTo("password", message="Your passwords did not match.")])
 
-    email = StringField("Email (Optional)")
+    email = StringField("Email", validators=[Email()])
     
     remember = BooleanField("Remember Me")
 

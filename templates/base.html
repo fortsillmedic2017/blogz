@@ -14,7 +14,17 @@
            {% block nav %}
             {% endblock nav%}                                              
         </div>
-   <hr>
+   <hr id = "hr1">
+   
+   <!--This pulls in the flash messages you put in the routes
+   these will be a list so ned a for loop to iterrate-->
+   {% with messages = get_flashed_messages () %}
+        <ul>
+        {% for message in messages %}
+            <li>{{message}}</li>
+        {% endfor %}
+        </ul>
+   {% endwith %}
     {% block content %}
     {% endblock content %}
 

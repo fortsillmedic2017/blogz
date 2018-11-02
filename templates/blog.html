@@ -1,7 +1,10 @@
 {% extends "base.html" %}
 {% block nav %}
+  <h1>{{title}}</h1>
     <nav>
+  
         <ul>
+            <li><a href="/">Home</a></li>
             <li><a href="/newpost">Add a Blog Entry</a></li>
             <li><a href="/logout">Logout</a></li>
         </ul>
@@ -10,31 +13,22 @@
 
 
 {% block content %}
-<h1>{{title}}</h1>
+
     {% if blogs|length == 0 %}
     <h3>No Blogs yet.</h3>
     
     {% else %}
         {% for blog in blogs %}
-       
-            <h1 class="heading_h1"><a href="/added_post"> {{blog.heading}}</a></h1>
+            <h1 class="heading_h1"><a href="#"> {{blog.heading}}</a></h1>
              <p>{{blog.body}}</p>
-             <form action = "/added_post" method="GET">
+             
+            <form action = "/added_post"  method="GET">
                 <input type="hidden"  name="blog-id" value = {{blog.id}}>
-                <input type="Submit" value = "See Indv. Post">
+                <input type="Submit" value = "Individual Post">
+                <hr>
             </form>
        
         {% endfor %}
     {% endif %}
 {% endblock content %}
 
-
-<!--{% for blog in blogs %}
-    
-    form action = "/added_post" method = "GET">
-           <h1 class="heading_h1"><a href="/added_post"> {{blog.heading}}</a>
-              <input type="hidden" name = "blog-id" value = {{blog.id}}>
-            <p>{{blog.body}}</p>
-        </form>
-        
-    {% endfor %}-->
