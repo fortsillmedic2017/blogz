@@ -1,18 +1,14 @@
 {% extends "base.html" %}
 
 {% block nav %}
+
 {% if not form.username.data%}
      <h1>Welcome <br>
      Please Login To Access Your Blog Page</h1>
 {% else %}
     <h1>Welcome {{form.username.data}} <br>
-    Please Login To Access Your Blog Page</h1>
+    Please Login To Access Blog Book </h1>
 {% endif %}
-
-<ul class="nav_ul">
-        <li><a href="/signup">Create An Account</a></li>
-         <li><a href="/logout">Logout</a></li>
-</ul>
 {% endblock nav %}
 
 {% block content %}

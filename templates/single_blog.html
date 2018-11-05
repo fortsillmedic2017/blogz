@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+     <h2 class="heading_h1">
+            <a href="/blog?id={{blog.id}}"> 
+            {{blog.heading}}</a></h2>
+            <p>{{blog.body}}</p>
+            <p><small>written by <a href="/blog?user={{blog.owner_id}}">
+            {{blog.owner.username}}</a> on {{blog. date_posted }} UTC</small></p>
+             <hr>  
+  
+{% endblock %}

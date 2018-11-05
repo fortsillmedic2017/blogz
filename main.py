@@ -1,7 +1,7 @@
 from flask import Flask, request, redirect, url_for, render_template, flash,session
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
-import pymysql, requests
+import pymysql, requests,urllib
 from forms import UserLogin, UserSignup, Add_Blog
 from wtforms_sqlalchemy.fields import QuerySelectField
 from bs4 import BeautifulSoup
@@ -36,10 +36,10 @@ def __repr__(self):
 
 
 class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True,  autoincrement=True)
-    username = db.Column(db.String(25), nullable=True, unique=True)
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(25),unique=True)
     email = db.Column(db.String(120), unique=True)
-    password = db.Column(db.String(60), default="No password input")
+    password = db.Column(db.String(60))
     image_file = db.Column(db.String(20), nullable=False,default="default.jpg")
     blogs = db.relationship("Blog", backref="owner")
 
@@ -57,12 +57,12 @@ def __repr__(self):
 
 @app.before_request
 def require_login():
-    allowed_routes = ['login', 'signup']
+    allowed_routes = ['login', 'signup', 'index']
     if request.endpoint not in allowed_routes and 'username' not in session:
         return redirect('/login')
 
 # the "username" not in session check to see if ("username", "email", ect..) is in a session if
-#not then you wil be forced to log in if want to enter site
+#not then you will be forced to login if want to enter site
 
 #above is checking to see if request.endpoint(the destination of the request)
 #not in the allowed_routes dictionary above  and also checking too see
@@ -76,14 +76,15 @@ def require_login():
 
 @app.route("/")
 def index():
-
-    return render_template("index.html", title="Home")
-
+    users = User.query.all()
+    return render_template("index.html", title="Home", users = users)
+#===========================================================================
 #===========================================================================
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = UserLogin()
+    users = User.query.all()
     errors = "User password is incorrect or User does not exsis."
     #Check data database by what was entered into the signup form
     if request.method == "POST" and form.validate_on_submit():
@@ -96,22 +97,52 @@ def login():
             
 #session['x'] is dic. = real value(userename, email, password ect...)
            session['username'] = username #the @app.before_request above will check
-           flash("Logged in")
+           flash("Logged In")
            print(session)
            return redirect("/newpost")
+
            
     # If any of input is not valid when you hit submit will display message below:
     #TODO - need better response message
         else: 
-            #flash("User password is incorrect or User does not exsist")
-            return render_template("login.html", form=form, title="Login", errors=errors)
+            #flash("User password is incorrect or User does not exsist", "danger")
+            return render_template("login.html",form=form, title="Login", errors=errors)
            
     return render_template("login.html", form=form, title="Login")
 
 
+'''@app.route('/login', methods=['GET', 'POST'])
+def login():
+    form = UserLogin()
+    errors = "User password is incorrect or User does not exsis."
+    #Check data database by what was entered into the signup form
+    if request.method == "POST" and form.validate_on_submit():
+        username = form.username.data
+        password = form.password.data
+
+#We want to now take the infor that was added by the above and query it to check if user exsist
+        user = User.query.filter_by(username=username).first()
+        if user and user.password == password:
+
+            #session['x'] is dic. = real value(userename, email, password ect...)
+           # the @app.before_request above will check
+           session['username'] = username
+           flash("Logged in")
+           print(session)
+           return redirect("/newpost")
+
+    # If any of input is not valid when you hit submit will display message below:
+    #TODO - need better response message
+        else:
+            #flash("User password is incorrect or User does not exsist")
+            return render_template("login.html", form=form, title="Login", errors=errors)
+
+    return render_template("login.html", form=form, title="Login")'''
+
+
 #===========================================================================
 
-@app.route("/signup", methods=["GET", "POST"])
+'''@app.route("/signup", methods=["GET", "POST"])
 def signup():
     form = UserSignup()
     errors = "Duplicate Data Entered. Data already in Database"
@@ -134,9 +165,38 @@ def signup():
             db.session.commit()
             session['username'] = username
 #If user exsist will:
-            return redirect("/login")
+            return render_template("login.html", form=form, title="Add New Post", errors=errors)
         else:
             #TODO - better response message if user exsist
+          # errors = "Duplicate Data Enter. Data already in Database"
+           return render_template("signup.html", form=form, title="Add New Post", errors=errors)
+    return render_template("signup.html", form=form, title="Signup")'''
+
+@app.route("/signup", methods=["POST", "GET"])
+def signup():
+    form = UserSignup()
+    errors = "Duplicate Data Entered. Data already in Database"
+    
+    if request.method == "POST" and form.validate_on_submit():  # validation
+        #Add data to database by what was entered into the signup form fields
+        username = form.username.data
+        email = form.email.data
+        password = form.password.data
+
+#We want to now take the infor that was added by the above and query it to check credetials
+#can use filter_by().first() if have one column that is unique
+
+#ChecK if user already exsist:
+        existing_user = User.query.filter_by(username=username).first()
+#If don't exsist will  create that user
+        if not existing_user:
+            new_user = User(username=username, email=email, password=password)
+            db.session.add(new_user)
+            db.session.commit()
+            session['username'] = username
+#If user exsist will:
+            return redirect("/newpost")
+        else:
           # errors = "Duplicate Data Enter. Data already in Database"
            return render_template("signup.html", form=form, title="Signup", errors=errors)
     return render_template("signup.html", form=form, title="Signup")
@@ -144,16 +204,38 @@ def signup():
 
 #===========================================================================
 
-@app.route("/blog", methods=["POST", "GET"])
-def display_blogs():
+
+'''@app.route("/newpost",  methods=["POST", "GET"])
+def add_new_post():
     form = Add_Blog()
-    blogs = Blog.query.all()
-    users = User.query.all()
-    
-    return render_template("blog.html", form=form, title="All Post", blogs=blogs,
-    users = users)
- 
-#===========================================================================
+
+    owner = User.query.filter_by(username=session["username"]).first()
+#This get the username of current loggin user out od the session
+#then it filter the result by username and get the first one
+#should only be one bc username is unque
+#this would put the result in the owner variable
+#then you can create a new_blog with that owner
+ #This is how you get the owner of blog(as long as they are logged in b/c of session ["username"] above)
+
+    if request.method == "POST":
+        input_title = form.heading.data
+        input_body = form.body.data
+        blog_id = form.hidden.data
+        new_blog = Blog(id=blog_id, heading=input_title,
+                        body=input_body, owner=owner)
+        db.session.add(new_blog)
+        db.session.commit()
+
+        blogs = Blog.query.filter_by(owner=owner).all()
+
+    if form.validate_on_submit():
+        # If all input is valid when you hit submit will go to "blog.html"
+        flash("Your post has been created!")
+        return render_template("singleUser.html", form=form, title="All Post for single user", blogs=blogs)
+        
+
+    # If any of input is not valid when you hit submit will go back to "signup.html"
+    return render_template("newpost.html", title="Add new Post!", form=form)'''
 
 
 @app.route("/newpost",  methods=["POST", "GET"])
@@ -168,57 +250,74 @@ def add_new_post():
 #then you can create a new_blog with that owner
  #This is how you get the owner of blog(as long as they are logged in b/c of session ["username"] above)
 
-    
-    if request.method == "POST":
+    if request.method == "POST" and form.validate_on_submit():
         input_title = form.heading.data
         input_body = form.body.data
 
-        #blog_id = request.form["blog-id"]
         new_blog = Blog(heading=input_title, body=input_body, owner = owner  )
         db.session.add(new_blog)
         db.session.commit()
+        # If all input is valid when you hit submit will go to "blog.html"
+        return redirect('/blog?id={}'.format(new_blog.id))
         
-        blogs = Blog.query.filter_by(owner = owner).all()
-      
+        # If any of input is not valid when you hit submit will go back to "signup.html"
+        return render_template("newpost.html", title="Add new Post!", form=form)
 
-    if form.validate_on_submit():
-        # If all input is valid when you hit submit will go to "welcome.html"
-        return render_template("blog.html", form=form, title="Added Post", blogs=blogs)
-    # If any of input is not valid when you hit submit will go back to "signup.html"
-    return render_template("newpost.html", title="Add new Post!", form=form)
+    return render_template('newpost.html', header='Add New Post!', form = form)
+#===========================================================================
 
+@app.route("/blog")
+def post():
+    #Use these variables to grab values from form on blog page
+    blogs = Blog.query.all()
+    blog_id = request.args.get('id')
+    user_id = request.args.get('user')
+    
+
+   #This will return singleUser page with user_id information filled for 
+   # {{  }} for indiv users 
+    if user_id:
+        blogs = Blog.query.filter_by(owner_id=user_id)
+        return render_template('singleUser.html', title="All Blog Post from One User", blogs =blogs)
+    
+    if blog_id:
+        blog = Blog.query.get(blog_id)
+        return render_template('single_blog.html', title="Single Blog Post", blog = blog)
+    
+    return render_template('blog.html', blogs=blogs, title='All Blog Posts')
+
+
+
+
+'''@app.route("/blog", methods=["POST", "GET"])
+def display_blogs():
+    form = UserSignup()
+    blogs = Blog.query.all()
+    users = User.query.all()
+    
+    return render_template("blog.html", form=form, title="All Post", blogs=blogs, users =users)'''
 #===========================================================================
 
 
 
-@app.route("/singleUser")
-def user_html():
-    form = Add_Blog()
-    
-    blog_id = request.args.get("blog-id")
-    blog = Blog.query.get(blog_id)
-
     
     
-    return render_template("added_post.html", title="Added Post!", form=form , blog= blog)
-#===========================================================================
-
-
-'''@app.route("/added_post", methods=["POST", "GET"])
-def added_post():
-    form = Add_Blog()
-    blog_id = request.args.get("blog-id")
-    blog = Blog.query.get(blog_id)
-    
-    return render_template("added_post.html", title="Users  Post!", form=form, blog= blog)'''
+   
 
 #===========================================================================
 
 
+'''@app.route("/single_blog")
+def single_blog():
+    blog_id = request.args.get('id')
+    user_id = request.args.get('user')
+    blogs = Blog.query.all()
+
+    return render_template("singleUser.html", title="Added Post!", blogs=blogs)'''
 
 
 
-#===========================================================================
+
 
 
 
@@ -229,6 +328,18 @@ def logout():
 #this del session["username"] will let you knoe if user ins login or not
     del session['username']
     return render_template("/blog.html", form=form, title="All Post", blogs=blogs)
+
+
+'''@app.route("/logout", methods=["GET"])
+
+
+def logout():
+    form = UserSignup()
+    blogs = Blog.query.all()
+#this del session["username"] will let you knoe if user ins login or not
+    del session['username']
+    return render_template("/blog.html", form=form, title="All Post", blogs=blogs)'''
+
 
 #============================================================================
 if __name__ == '__main__':

@@ -1,21 +1,15 @@
 {% extends "base.html" %}
 
 {% block nav %}
-    <nav>
-        <ul>
-            <li><a href="/">Home</a></li>
-            <li><a href="/blog">All Blogs</a></li>
-            <li><a href="/logout">Logout</a></li>
-        </ul>
-    </nav>
+   <h1>{{title}}</h1> 
 {% endblock nav %}
 
 {% block content %}
-    <h1>{{title}}</h1>
+    
 
    <div class = "title_input">
      <div>
-        <form "/newpost" method = "POST">       
+        <form  method = "POST">       
            {{form.hidden_tag()}} 
            {{form.heading.label}}
            {{form.heading}}
@@ -32,11 +26,11 @@
            <span class ="errors">{{ error }}</span>  
           {% endfor %}
      </div>
-        <label>  
-            <input type="hidden"  name="blog-id">
-            <input type="submit"  value="Add Entry">
-        </label>  
-         </form>
+            <label>  
+                <!--<input type="hidden"  name="blog-id">-->
+                <input type="submit"  value="Add Entry">
+            </label>  
+        </form>
     </div>
 
 {% endblock content %}

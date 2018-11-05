@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
    <title>{{title}}</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename ='css/main.css')}}">
+   <link rel="stylesheet" href="{{ url_for('static', filename ='css/main.css')}}">
     <style>
             .errors {color: red;} 
     </style>
@@ -11,8 +11,20 @@
 <body>
     <div id ="container">
         <div class ="header">
-           {% block nav %}
-            {% endblock nav%}                                              
+            {% block nav %}
+           
+            {% endblock nav%} 
+             <nav>
+                 <ul>
+                     <li><a href="/">Home</a></li>
+                     <li><a href="/blog">All Posted Blogs</a></li>
+                     <li><a href="/newpost">Add a Blog Entry</a></li>
+                     <li><a href="/login">Login</a></li>
+                     <li><a href="/logout">Logout</a></li>
+                     <li><a href="/signup">Create An Account</a></li>
+                 </ul>
+             </nav>
+                                                       
         </div>
    <hr id = "hr1">
    

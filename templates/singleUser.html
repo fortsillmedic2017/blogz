@@ -1,19 +1,19 @@
 {% extends "base.html" %}
-
-{% block nav %}
-    <nav>
-        <ul>
-            <li><a href="/blog">Main Page Blog</a></li>
-            <li><a href="/newpost">Add a Blog Entry</a></li>
-            <li><a href="/logout">Logout</a></li>
-        </ul>
-    </nav>
-{% endblock nav %}
+    {% block nav %}
+        <h1>{{title}}</h1>
+    {% endblock nav %}
 
 
 {% block content %}
-<h1>{{title}}</h1>
-<h1 class="heading_h1"><a href="/blog"> {{blog.heading}}</a></h1>
-             <p>{{blog.body}}</p>
-{% endblock content %}
 
+   {% for blogs in blogs %}
+    <h3><a href="/blog?id={{blog.id}}">{{blog.title}}</a></h3>
+    <p>{{blog.body}}</p>
+    <p><small>written by <a href="/blog?user={{blog.owner_id}}">{{blog.owner.username}}</a> on {{blog.owner.username}}</a> on {{blog.date_posted }} UTC</small></p>    
+    
+    <hr>
+    {% endfor %}
+                    
+    
+    
+{% endblock content %}
