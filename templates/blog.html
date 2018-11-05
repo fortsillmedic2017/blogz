@@ -17,9 +17,9 @@
             <a href="/blog?id={{blog.id}}"> 
             {{blog.heading}}</a></h1>
             <p>{{blog.body}}</p>
-            <p><small>written by <a href="/blog?user={{blog.owner_id}}">
+            <p><small>written by <a href="/blog?id={{blog.id}}">
             {{blog.owner.username}}</a> on {{blog.date_posted }} UTC</small></p>
-             <hr>-->
+             <hr>
                     
         {% endfor %}
     {% endif %}
